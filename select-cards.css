@@ -1,0 +1,55 @@
+.select.cards{
+    transition: transform 0.25s;
+    display: flex;
+}
+
+.select.cards .ui.card{
+    margin: 1em 0;
+    margin-right: 0.75em;
+    margin-left: 0.75em;
+    float: left;
+    display: flex;
+    text-align: center;
+}
+
+.select.cards .ui.card:first-child,
+.select.cards .ui.card:last-child{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.select.cards .ui.card .ui.image{
+    position: relative;
+    padding-top: 50%;
+    padding-bottom: 50%;
+}
+
+.select.cards .ui.card .ui.image img:before{
+    font-family: FontAwesome;
+    font-size: 3em;
+    content: "\f110";
+    -webkit-animation: fa-spin 1s infinite steps(8);
+    animation: fa-spin 1s infinite steps(8);
+    display: inline-block;
+    visibility: visible;
+}
+
+.select.cards .ui.card .ui.image img{
+    position: absolute;
+    top: 50%;
+    bottom: 0;
+    left: 50%;
+    right: 0; 
+    transform: translateY(-50%) translateX(-50%);
+    min-height: 30px;
+    max-width: 110px;
+}
+
+.select.cards .ui.card .label{
+    transition: opacity 0.1s;
+    z-index: 2;
+}
+
+.select.cards .ui.card .button{
+    transition: background-color 0.12s;
+}
