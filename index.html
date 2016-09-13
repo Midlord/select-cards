@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Select-cards : Convert &lt;select&gt; element to Semantic UI cards">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Select-cards</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/xxRockOnxx/select-cards">View on GitHub</a>
+
+          <h1 id="project_title">Select-cards</h1>
+          <h2 id="project_tagline">Convert &lt;select&gt; element to Semantic UI cards</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/xxRockOnxx/select-cards/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/xxRockOnxx/select-cards/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="select-cardsjs" class="anchor" href="#select-cardsjs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>select-cards.js</h1>
+
+<p>Turn your plain <code>&lt;select&gt;</code> elements in to Semantic UI's Cards component.</p>
+
+<h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<ul>
+<li>jQuery</li>
+<li>FontAwesome</li>
+<li>Semantic UI Card Css</li>
+<li>Semantic UI Button Css</li>
+<li>Semantic UI Label CSS</li>
+</ul>
+
+<p>In case you don't want to load another files, then just copy their code.
+Actually, there's a reason Semantic UI splitted their assets. You can find them on CDNs like cdnjs.com</p>
+
+<h2>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Options</h2>
+
+<h6>
+<a id="see-semantic-uis-documentation-for-available-classes" class="anchor" href="#see-semantic-uis-documentation-for-available-classes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>See Semantic UI's documentation for available classes</h6>
+
+<h1></h1>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th align="center">Type</th>
+<th align="center">Default</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>addLabelColor</td>
+<td align="center">string</td>
+<td align="center">'green'</td>
+<td align="left">Added label color</td>
+</tr>
+<tr>
+<td>addLabelPosition</td>
+<td align="center">string</td>
+<td align="center">'right'</td>
+<td align="left">Added label position</td>
+</tr>
+<tr>
+<td>buttonColor</td>
+<td align="center">string</td>
+<td align="center">'positive'</td>
+<td align="left">Add button color</td>
+</tr>
+<tr>
+<td>addLabel</td>
+<td align="center">string</td>
+<td align="center">'Add'</td>
+<td align="left">Add button label</td>
+</tr>
+<tr>
+<td>removeLabel</td>
+<td align="center">string</td>
+<td align="center">'Remove'</td>
+<td align="left">Remove button label</td>
+</tr>
+<tr>
+<td>cardPerSlide</td>
+<td align="center">int</td>
+<td align="center">4</td>
+<td align="left">Number of cards to show per page</td>
+</tr>
+<tr>
+<td>slideBy</td>
+<td align="center">int</td>
+<td align="center">1</td>
+<td align="left">Number of cards to slide by after clicking next button</td>
+</tr>
+<tr>
+<td>maxItems</td>
+<td align="center">int</td>
+<td align="center">4</td>
+<td align="left">Uses cardPerSlide value as default. This is useful if remote option is needed</td>
+</tr>
+<tr>
+<td>remote</td>
+<td align="center">string</td>
+<td align="center">false</td>
+<td align="left">Url on where to fetch more options</td>
+</tr>
+<tr>
+<td>nextButton</td>
+<td align="center">string</td>
+<td align="center">none</td>
+<td align="left">Specify a selector for next button</td>
+</tr>
+<tr>
+<td>prevButton</td>
+<td align="center">string</td>
+<td align="center">none</td>
+<td align="left">Specify a selector for previous button</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="callbacks" class="anchor" href="#callbacks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Callbacks</h2>
+
+<h6>
+<a id="available-callbacks-currently" class="anchor" href="#available-callbacks-currently" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Available callbacks currently</h6>
+
+<h1></h1>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th align="center">Description</th>
+<th align="center">Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>onInitialize</td>
+<td align="center">You can do stuffs here after the plugin has been initialize</td>
+<td align="center">none</td>
+</tr>
+<tr>
+<td>onFetch</td>
+<td align="center">What to do with the response after fetching</td>
+<td align="center">API response</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code>// Example
+selectCards({
+    onFetch: function(){},
+    onInitialize: function(){}
+});
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h1></h1>
+
+<pre><code>&lt;div&gt;
+    &lt;select id="example"&gt;
+        &lt;option value="1" data-img="/img/example.png"&gt;Exapmle Text&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;button type="button" id="prevbtn"&gt;Previous&lt;button&gt;
+    &lt;button type="button" id="nextbtn"&gt;Next&lt;button&gt;
+&lt;/div&gt;
+
+var selectCards = $('#example').selectCards({
+    nextButton:'#nextbtn',
+    previousButton: '#prevbtn'
+});
+
+// Next Slide
+$('#nextbtn').on('click', function(){
+    selectCards.next();
+});
+
+// Previous Slide
+$('#prevtbtn').on('click', function(){
+    selectCards.previous();
+});
+
+// Responsive helper / Modal Usage just use refreshWidth().
+// Example:
+
+$modal.on('modal.show.event', function(){
+    selectCards.refreshWidth();
+});
+
+$(window).on('resize', function(){
+    refreshWidth();
+});
+
+// Reset. Remove all active.
+// In case you need to reset the form, select values might be reset
+// but the cards are not aware of this.
+
+selectCards.reset();
+
+// Manually Select A Value
+selectCards.toggle(value)
+
+</code></pre>
+
+<p><b>NOTE:</b>
+If the toggled value is not yet on the list and <code>remote</code> option is enabled, it will be placed on the <code>pending</code> lists and once that item is fetched it will automatically be selected and will be removed from the pending list</p>
+
+<p><b>Important: </b> Items on pending list will not be added on the hidden <code>select</code> which means, if you submitted the form while that card/option is not yet fetched, that pending item will not be submitted. Will see if a fix is needed. Haven't found any reason yet.</p>
+
+<h2>
+<a id="remote" class="anchor" href="#remote" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Remote</h2>
+
+<h1></h1>
+
+<p>If remote option is wanted, please specify a value for the <code>maxItems</code> as the maximum number of items that can be fetched from the API (example: max row count).</p>
+
+<p>If you already have a working <code>search</code> API, the plugin is sending additional data named as <code>action</code> with a value of <code>next</code> and <code>last_id</code> with the value of the last data-value inserted in the DOM.</p>
+
+<p>Normally you would do something like this in your API if you will use this:</p>
+
+<pre><code>if($request-&gt;action == 'next'){
+    $foods = Food::where('id', '&gt;', $request-&gt;last_id)-&gt;first();
+}
+</code></pre>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog:</h2>
+
+<p>Version 2</p>
+
+<ul>
+<li>added <code>slideBy</code> option</li>
+<li>added <code>pending</code> list internally.</li>
+<li>added <code>toggle</code> method</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Select-cards maintained by <a href="https://github.com/xxRockOnxx">xxRockOnxx</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
