@@ -24,6 +24,7 @@ Actually, there's a reason Semantic UI splitted their assets. You can find them 
 | addLabel | string | 'Add' | Add button label |
 | removeLabel |string|'Remove'| Remove button label|
 | cardPerSlide | int | 4 | Number of cards to show per page |
+| slideBy | int | 1 | Number of cards to slide by after clicking next button |
 | maxItems | int | 4 | Uses cardPerSlide value as default. This is useful if remote option is needed|
 | remote | string | false | Url on where to fetch more options |
 | nextButton | string| none | Specify a selector for next button |
@@ -88,7 +89,17 @@ $(window).on('resize', function(){
 // but the cards are not aware of this.
 
 selectCards.reset();
+
+// Manually Select A Value
+selectCards.toggle(value)
+
 ```
+
+<b>NOTE:</b>
+If the toggled value is not yet on the list and `remote` option is enabled, it will be placed on the `pending` lists and once that item is fetched it will automatically be selected and will be removed from the pending list
+
+<b>Important: </b> Items on pending list will not be added on the hidden `select` which means, if you submitted the form while that card/option is not yet fetched, that pending item will not be submitted. Will see if a fix is needed. Haven't found any reason yet.
+
 
 ## Remote
 =======
@@ -103,3 +114,10 @@ if($request->action == 'next'){
     $foods = Food::where('id', '>', $request->last_id)->first();
 }
 ```
+
+## Changelog:
+
+Version 2
+- added `slideBy` option
+- added `pending` list internally.
+- added `toggle` method
