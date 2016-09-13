@@ -7,11 +7,12 @@
             addLabelColor: 'green',
             addLabelPosition: 'right',
             buttonColor: 'positive',
-            buttonIcon: 'fa fa-fw fa-plus',
-            buttonLabel: 'Add',
+            addLabel: 'Add',
+            removeLabel: 'Remove',
 
             // Plugin related
             cardPerSlide: 4,
+            slideBy: 1,
             maxItems: 0,
             remote: false,
             onFetch: function(response){
@@ -27,6 +28,19 @@
                         .end()
                     .find('button.bottom.attached')
                         .data('value', response.id);
+
+                // Check if this item is in pending
+                let index = $.inArray(response.id.toString(), pending);
+
+                if(index !== -1){
+                    $lastCard
+                        .find('button.bottom.attached')
+                        .trigger('click');
+
+                    // remove it from the pending list
+                    pending.splice(index, 1);
+
+                }
 
                 if($wrapper.find('.ui.card').length !== maxItems){
                     $(settings.nextButton).removeProp('disabled');
@@ -57,19 +71,20 @@
             totalItemWidth,
             totalItems = $options.length, // By default, it uses the number of options.
             maxItems   = settings.maxItems !== 0 ? settings.maxItems : totalItems, // By default, it uses totalItems. If remote add max items.
-            currentX   = 0;
+            currentX   = 0,
+            pending    = [];
 
         this.initialize = function(){
             $element.css('display', 'none');
+            console.log($wrapper)
 
             if($options.length > 0){
-
                 $.each($options, function(){
                     let name  = $(this).html();
                     let value = $(this).val();
                     let image = $(this).data('img');
 
-                    $element.addCard(name, value, image);
+                    $element.addCard(name, image, value);
                 });
 
                 $element.refreshWidth();
@@ -80,7 +95,10 @@
             return this;
         }
 
-        this.addCard = function(name, value, image){
+        this.addCard = function(name, image, value){
+
+            if($element.has(value.toString())) return false;
+
             $cardTemplate = $('<div />')
                 .addClass('ui card')
                 .appendTo($wrapper);
@@ -120,29 +138,32 @@
                     .appendTo($cardTemplate);
 
                     $cardButtonIcon = $('<i />')
-                        .addClass(settings.buttonIcon)
+                        .addClass('fa fa-fw fa-plus')
                         .appendTo($cardButton);
 
                     $cardButtonLabel = $('<span />')
-                        .html(settings.buttonLabel)
+                        .html(settings.addLabel)
                         .appendTo($cardButton);
+
+            $element.refreshWidth();
 
             return this;
         }
 
-        this.refreshWidth = function(parentWidth){
+        this.refreshWidth  = function(parentWidth){
             parentWidth    = parentWidth ? parentWidth : $element.parent().width();
-            itemWidth      = parentWidth*( 100/settings.cardPerSlide*0.01 );
+            itemWidth      = parentWidth*( 100/settings.cardPerSlide*0.01 ); // Get percentage. 100/4 = 25%
             itemMargin     = parseFloat( $wrapper.find('.ui.card').first().css('margin-right') );
+            totalItems     = $wrapper.find('.ui.card').length;
             totalItemWidth = itemWidth + itemMargin*2;
 
             $wrapper.find('.ui.card').css('width', itemWidth-itemMargin*2);
-            $wrapper.css('width', (totalItemWidth) * totalItems);
+            $wrapper.css('width', totalItemWidth * totalItems);
 
             return this;
         }
 
-        this.next = function(){
+        this.next = function(){            
             if( currentX == itemWidth * (maxItems-settings.cardPerSlide) ){
                 return false;
             }
@@ -163,10 +184,6 @@
                     }
                 });
 
-                // Recalculate container and last inserted item width
-                totalItems = $wrapper.find('.ui.card').length;
-                $element.refreshWidth();
-
                 // Make last card image invisible while fetching
                 $lastCard
                     .next()
@@ -178,10 +195,23 @@
 
             $element.trigger('next.card');
 
-            currentX += itemWidth;
+            currentX += itemWidth*settings.slideBy;
+
+            /*
+            *   In case slideBy surpasses the number of cards we have
+            *   Remove the excess number to slide
+            */
+
+            let maxX = (totalItems-settings.cardPerSlide) * itemWidth;
+
+            if (currentX > maxX){
+                let excessX = currentX - maxX;
+                currentX = currentX - excessX;
+            }
+
             $wrapper.css('transform', 'translate3D(-'+currentX+'px,0,0)');
 
-            if(currentX == itemWidth * (maxItems-itemPerSlide)){
+            if(currentX == itemWidth * (maxItems-settings.cardPerSlide)){
                 $(settings.nextButton).prop('disabled', true)
             }
 
@@ -198,8 +228,19 @@
             }
 
             $element.trigger('previous.card');
-            
-            currentX -= itemWidth;
+
+            currentX -= itemWidth*settings.slideBy;
+
+            /*
+            *   If going back more than the first slide
+            *   Remove the excess.
+            */
+
+            if (currentX < 0){
+                let excessX = currentX*(-1);
+                currentX = currentX + excessX;
+            }
+
             $wrapper.css('transform', 'translate3D(-'+currentX+'px,0,0)');
 
             if(currentX == 0) $(settings.previousButton).prop('disabled', true);
@@ -211,7 +252,52 @@
             return this;
         }
 
-        $wrapper.on('click', 'button.bottom.attached', function(event) {
+        this.has = function(value){
+            value = value.toString();
+
+            let options = $wrapper
+            .find('button.bottom.attached')
+            .filter(function(){
+                return $(this).data('value').toString() == value
+            });
+
+            return options.length > 0;
+        }
+
+        this.toggle = function(value){
+
+            array = Array.isArray(value) ? value : value.toString().split();
+            let buttons = $wrapper.find('button.bottom.attached');
+
+            $.each(array, function(index, val){
+
+                // Value not in current lists.
+                // When it is fetched, activate it
+                if(!$element.has(val)){
+                    pending.push(val)
+                }
+
+                buttons.filter(function(){
+                    return $(this).data('value').toString() == val
+                }).trigger('click')
+            });
+        }
+
+        this.reset = function(){
+            $wrapper
+                .find('button.bottom.attached')
+                .filter(function(index, element){
+                    return !$(this).hasClass('positive')
+                })
+                .trigger('click');
+
+            $element.trigger('reset');
+            pending = [];
+
+            return this;
+        }
+
+        $wrapper.on('click', 'button.bottom.attached', function(event){
             if($(this).hasClass('positive')){
                 // Append data to select as <option>
                 $element.append('<option selected value="'+$(this).data('value')+'" />');
@@ -227,7 +313,7 @@
                     .removeClass('positive')
                     .data('selected', true)
                     .html(
-                        '<i class="fa fa-fw fa-minus" /> Remove Food'
+                        '<i class="fa fa-fw fa-minus" /> '+settings.removeLabel
                     );
 
                 $(this).closest('.card').find('.ribbon.label').css('opacity', '1');
@@ -239,7 +325,7 @@
                     .addClass('positive')
                     .data('selected', false)
                     .html(
-                        '<i class="fa fa-fw fa-plus"></i> Add Food'
+                        '<i class="fa fa-fw fa-plus"></i> '+settings.addLabel
                     );
 
                 $(this).closest('.card').find('.ribbon.label').css('opacity', '0');
